@@ -38,7 +38,7 @@ Provide instructions for running the app and include:
 Here is a simple Rust program that fetches an HLS playlist, parses the document, and sorts it.
 
 hls_playlist_sorter.rs
-
+```rust
 use reqwest;
 use std::collections::VecDeque;
 use std::fs::File;
@@ -93,6 +93,7 @@ async fn main() -> Result<(), reqwest::Error> {
 
     Ok(())
 }
+```
 Instructions for building and compiling the source on Mac OS X or Windows
 
 Install Rust and Cargo on your system if you haven't already. You can download the installer from the official Rust website.
@@ -236,6 +237,7 @@ Mac OS X
 Install Rust using Homebrew: brew install rust
 Create a new directory for your project and navigate to it in the terminal
 Create a new file called Cargo.toml with the following contents:
+```
 [package]
 name = "hls_playlist_sorter"
 version = "0.1.0"
@@ -243,6 +245,7 @@ edition = "2018"
 
 [dependencies]
 reqwest = "0.11.6"
+```
 Create a new file called main.rs with the code above
 Run cargo build to build the project
 Run cargo run to run the project
@@ -251,6 +254,7 @@ Windows
 Install Rust using the Rust installer: <https://www.rust-lang.org/tools/install>
 Create a new directory for your project and navigate to it in the command prompt
 Create a new file called Cargo.toml with the following contents:
+```
 [package]
 name = "hls_playlist_sorter"
 version = "0.1.0"
@@ -258,6 +262,7 @@ edition = "2018"
 
 [dependencies]
 reqwest = "0.11.6"
+```
 Create a new file called main.rs with the code above
 Run cargo build to build the project
 Run cargo run to run the project
