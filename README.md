@@ -35,65 +35,8 @@ Provide instructions for running the app and include:
 2. A compiled binary executable runnable on Mac OS X or Windows
 
 ## Option 1
-Here is a simple Rust program that fetches an HLS playlist, parses the document, and sorts it.
+The program  fetches an HLS playlist, parses the document, and sorts it.
 
-hls_playlist_sorter.rs
-```rust
-use reqwest;
-use std::collections::VecDeque;
-use std::fs::File;
-use std::io::Write;
-use std::path::Path;
-
-#[derive(Debug, PartialEq, Eq)]
-struct PlaylistItem {
-    url: String,
-    duration: f64,
-}
-
-impl Ord for PlaylistItem {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.duration.partial_cmp(&other.duration).unwrap()
-    }
-}
-
-impl PartialOrd for PlaylistItem {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-#[tokio::main]
-async fn main() -> Result<(), reqwest::Error> {
-    let url = "https://example.com/playlist.m3u8"; // replace with your playlist URL
-    let response = reqwest::get(url).await?;
-    let body = response.text().await?;
-    let mut lines = body.lines();
-    let mut items = VecDeque::new();
-
-    while let Some(line) = lines.next() {
-        if line.starts_with("#EXTINF:") {
-            let duration = line.trim_start_matches("#EXTINF:").trim_end_matches(",");
-            let url = lines.next().unwrap();
-            items.push_back(PlaylistItem {
-                url: url.to_string(),
-                duration: duration.parse().unwrap(),
-            });
-        }
-    }
-
-    items.make_contiguous().sort();
-
-    let mut file = File::create(Path::new("sorted_playlist.m3u8")).unwrap();
-    writeln!(file, "#EXTM3U").unwrap();
-    for item in items {
-        writeln!(file, "#EXTINF:{},", item.duration).unwrap();
-        writeln!(file, "{}", item.url).unwrap();
-    }
-
-    Ok(())
-}
-```
 Instructions for building and compiling the source on Mac OS X or Windows
 
 Install Rust and Cargo on your system if you haven't already. You can download the installer from the official Rust website.
@@ -178,55 +121,6 @@ To run the program, simply download the binary and execute it in your terminal o
 Note: The compiled binaries are not signed, so you may need to bypass Gatekeeper on Mac OS X or Windows Defender on Windows to run the program.
 
 ## Option 2
-Here is an example of how you can fetch an HLS playlist, parse the document, and sort it in Rust:
-```rust
-use reqwest;
-use std::collections::Vec;
-use std::fs::File;
-use std::io::prelude::*;
-use std::path::Path;
-
-struct Playlist {
-    segments: Vec<String>,
-}
-
-impl Playlist {
-    fn new() -> Self {
-        Playlist { segments: Vec::new() }
-    }
-
-    fn add_segment(&mut self, segment: String) {
-        self.segments.push(segment);
-    }
-
-    fn sort(&mut self) {
-        self.segments.sort();
-    }
-}
-
-fn fetch_playlist(url: &str) -> Result<Playlist, reqwest::Error> {
-    let mut response = reqwest::get(url)?;
-    let mut playlist = Playlist::new();
-    let mut lines = response.text()?.lines();
-    for line in lines {
-        if line.starts_with("#EXTINF:") {
-            let segment = line.trim_start_matches("#EXTINF:").trim().to_string();
-            playlist.add_segment(segment);
-        }
-    }
-    playlist.sort();
-    Ok(playlist)
-}
-
-fn main() {
-    let url = "https://example.com/playlist.m3u8";
-    let playlist = fetch_playlist(url).unwrap();
-    println!("Sorted playlist:");
-    for segment in playlist.segments {
-        println!("{}", segment);
-    }
-}
-```
 
 This code uses the reqwest library to fetch the HLS playlist from the specified URL, and then parses the document to extract the segment URLs. The Playlist struct is used to store the segment URLs and sort them.
 
