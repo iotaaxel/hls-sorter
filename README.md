@@ -1,5 +1,9 @@
 # hls-sorter
 
+**Disclaimer:** This was the initial prototype. The beta-friendly version is a private WIP. Options 1 and 2 are two separate brainstorms. 
+
+**Future work:** Eventually, I will probably turn this into a crate.
+
 ## Full Overview
 
 Fetch the following hls playlist, parse the document, and sort it.
